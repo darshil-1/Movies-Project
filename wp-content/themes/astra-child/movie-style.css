@@ -1,5 +1,3 @@
-
-
 .all-movies {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -83,25 +81,42 @@
 }
 
 
-.heading{
+.heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 
+.movie-images-gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.movie-image-item {
+    max-width: 290px;
+}
+
+.movie-image-item img {
+    width: 100%;
+    height: auto;
+}
+
 
 
 @media (max-width: 768px) {
     .all-movies {
-        grid-template-columns: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
         margin-top: 20px;
     }
 
     .movie-item {
-        max-width: 100%; 
-        padding-bottom: 15px; 
+        max-width: 100%;
+        padding-bottom: 15px;
         margin-bottom: 20px;
     }
 
@@ -111,15 +126,15 @@
 
     .movie-item p {
         font-size: 14px;
-        padding-left: 15px; 
+        padding-left: 15px;
     }
 
     .movie-item img {
-        height: 180px; 
+        height: 180px;
     }
 
     .pagination {
-        flex-direction: column; 
+        flex-direction: column;
         gap: 8px;
     }
 }
@@ -127,7 +142,7 @@
 
 @media (max-width: 480px) {
     .all-movies {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
         gap: 15px;
         margin-top: 15px;
     }
@@ -143,11 +158,11 @@
 
     .movie-item p {
         font-size: 13px;
-        padding-left: 10px; 
+        padding-left: 10px;
     }
 
     .movie-item img {
-        height: 160px; 
+        height: 160px;
     }
 
     .pagination {
@@ -157,25 +172,21 @@
     .pagination a,
     .pagination span {
         padding: 8px 14px;
-        font-size: 14px; 
+        font-size: 14px;
     }
 }
 
 @media (min-width: 922px) {
     .site-content .ast-container {
-        display: block; 
+        display: block;
     }
 
     .all-movies {
-        grid-template-columns: repeat(4, 1fr); 
+        grid-template-columns: repeat(4, 1fr);
         gap: 30px;
     }
 
     .movie-item {
-        max-width: 300px; 
+        max-width: 300px;
     }
 }
-
-
-
-

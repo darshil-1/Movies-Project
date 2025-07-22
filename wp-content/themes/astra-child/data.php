@@ -307,3 +307,237 @@ endif;
 ?>
 
 <?php get_footer(); ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+function render_movie_custom_fields($post) {
+    $desc = get_post_meta($post->ID, '_movie_description', true);
+    $casting = get_post_meta($post->ID, '_movie_cast', true);
+    $director = get_post_meta($post->ID, '_movie_director', true);
+    $date = get_post_meta($post->ID, '_movie_date', true);
+    $rating = get_post_meta($post->ID, '_movie_rating', true);
+    $images = get_post_meta($post->ID, '_movie_images', true); // Get saved images
+
+    // Convert images to a comma-separated string for easy handling
+    if ($images && is_array($images)) {
+        $image_urls = implode(',', $images);
+    } else {
+        $image_urls = '';
+    }
+
+    ?>
+    <p><label>Description: <textarea name="movie_desc"><?php echo esc_textarea($desc); ?></textarea></label></p>
+    <p><label>Casting: <input type="text" name="movie_cast" value="<?php echo esc_attr($casting); ?>" /></label></p>
+    <p><label>Director: <input type="text" name="movie_director" value="<?php echo esc_attr($director); ?>" /></label></p>
+    <p><label>Release Date: <input type="date" name="movie_date" value="<?php echo esc_attr($date); ?>" /></label></p>
+    <p><label>Rating: <input type="text" name="movie_rating" value="<?php echo esc_attr($rating); ?>" /></label></p>
+
+    <p>
+        <label>Images: <input type="text" name="movie_images" id="movie_images" value="<?php echo esc_attr($image_urls); ?>" /></label>
+        <button type="button" id="upload_images_button" class="button">Upload Images</button>
+    </p>
+    <div id="movie_images_preview">
+        <?php
+            if (!empty($image_urls)) {
+                $image_ids = explode(',', $image_urls);
+                foreach ($image_ids as $image_id) {
+                    echo wp_get_attachment_image($image_id, 'thumbnail');
+                }
+            }
+        ?>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+            var image_frame;
+            $('#upload_images_button').on('click', function(e) {
+                e.preventDefault();
+                
+                // If the media frame already exists, reopen it.
+                if (image_frame) {
+                    image_frame.open();
+                    return;
+                }
+
+                // Create a new media frame
+                image_frame = wp.media({
+                    title: 'Select Images',
+                    button: {
+                        text: 'Add Images'
+                    },
+                    multiple: true // Allow multiple images to be selected
+                });
+
+                image_frame.on('select', function() {
+                    var selection = image_frame.state().get('selection');
+                    var selected_images = [];
+                    selection.each(function(attachment) {
+                        selected_images.push(attachment.id);
+                    });
+
+                    // Update the input field with the selected image IDs
+                    $('#movie_images').val(selected_images.join(','));
+
+                    // Preview the selected images
+                    var preview = $('#movie_images_preview');
+                    preview.html('');
+                    selected_images.forEach(function(image_id) {
+                        preview.append('<img src="' + wp.media.attachment(image_id).get('url') + '" class="thumbnail" />');
+                    });
+                });
+
+                // Open the media frame
+                image_frame.open();
+            });
+        });
+    </script>
+    <?php
+}
+
+
+
+function save_movie_custom_fields($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+
+    if (isset($_POST['movie_desc'])) {
+        update_post_meta($post_id, '_movie_description', sanitize_textarea_field($_POST['movie_desc']));
+    }
+    if (isset($_POST['movie_cast'])) {
+        update_post_meta($post_id, '_movie_cast', sanitize_text_field($_POST['movie_cast']));
+    }
+    if (isset($_POST['movie_director'])) {
+        update_post_meta($post_id, '_movie_director', sanitize_text_field($_POST['movie_director']));
+    }
+    if (isset($_POST['movie_date'])) {
+        update_post_meta($post_id, '_movie_date', sanitize_text_field($_POST['movie_date']));
+    }
+    if (isset($_POST['movie_rating'])) {
+        update_post_meta($post_id, '_movie_rating', sanitize_text_field($_POST['movie_rating']));
+    }
+
+    // Save multiple images
+    if (isset($_POST['movie_images'])) {
+        $image_ids = explode(',', sanitize_text_field($_POST['movie_images']));
+        update_post_meta($post_id, '_movie_images', $image_ids);
+    }
+}
+
+
+
+
+
+
+<?php get_header(); ?>
+
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+
+<div class="movie-container">
+    <h1 class="movie-title"><?php the_title(); ?></h1>
+
+    <div class="movie-meta">
+        <?php if (has_post_thumbnail()) : ?>
+            <div class="movie-featured-image">
+                <?php the_post_thumbnail('large'); ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="movie-details">
+            <div class="movie-description">
+                <?php the_content(); ?>
+            </div>
+
+            <div class="movie-custom-fields">
+                <?php 
+                // Display custom fields
+                $movie_description = get_post_meta(get_the_ID(), '_movie_description', true);
+                if ($movie_description) {
+                    echo '<p><strong>Description: </strong>' . esc_html($movie_description) . '</p>';
+                }
+
+                $movie_director = get_post_meta(get_the_ID(), '_movie_director', true);
+                if ($movie_director) {
+                    echo '<p><strong>Director: </strong>' . esc_html($movie_director) . '</p>';
+                }
+
+                $movie_year = get_post_meta(get_the_ID(), '_movie_year', true);
+                if ($movie_year) {
+                    echo '<p><strong>Release Year: </strong>' . esc_html($movie_year) . '</p>';
+                }
+
+                $movie_rating = get_post_meta(get_the_ID(), '_movie_rating', true);
+                if ($movie_rating) {
+                    echo '<p><strong>Rating: </strong>' . esc_html($movie_rating) . '</p>';
+                }
+
+                $movie_date = get_post_meta(get_the_ID(), '_movie_date', true);
+                if ($movie_date) {
+                    echo '<p><strong>Release Date: </strong>' . esc_html($movie_date) . '</p>';
+                }
+                ?>
+            </div>
+
+            <div class="movie-images">
+                <?php
+                // Get the movie images from the custom field
+                $movie_images = get_post_meta(get_the_ID(), '_movie_images', true);
+                if ($movie_images) {
+                    $image_ids = explode(',', $movie_images);
+                    echo '<div class="movie-images-gallery">';
+                    foreach ($image_ids as $image_id) {
+                        $image_url = wp_get_attachment_url($image_id);
+                        $image_html = wp_get_attachment_image($image_id, 'medium');
+                        echo '<div class="movie-image-item">';
+                        echo $image_html;
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                }
+                ?>
+            </div>
+
+        <div class="movie-categories">
+            <?php 
+                $categories = get_the_terms(get_the_ID(), 'movie_category');
+                if ($categories && !is_wp_error($categories)) :
+            ?>
+                <strong>Categories:</strong> 
+                <?php the_terms(get_the_ID(), 'movie_category'); ?>
+            <?php endif; ?>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+<?php endwhile; endif; ?>
+
+<?php get_footer(); ?>
+
+
+
+
+
+
+
+$movie_images = get_post_meta(get_the_ID(), '_movie_images', true);
+if ($movie_images) {
+    $image_ids = explode(',', $movie_images);
+    echo '<div class="movie-images-gallery">';
+    foreach ($image_ids as $image_id) {
+        $image_html = wp_get_attachment_image($image_id, 'medium'); // Display image as thumbnail
+        echo '<div class="movie-image-item">';
+        echo $image_html;
+        echo '</div>';
+    }
+    echo '</div>';
+}

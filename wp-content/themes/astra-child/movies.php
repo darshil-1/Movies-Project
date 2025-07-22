@@ -25,7 +25,7 @@ $selected_category = isset($_GET['movie_category']) ? sanitize_text_field($_GET[
     </div>
     <div class="category-filter">
         <form action="" method="GET">
-            <label for="movie-category">Select By Category</label>
+            <label class="form-label" for="movie-category">Select By Category</label>
             <select name="movie_category" id="movie-category" onchange="this.form.submit()">
                 <option value="">Select Category</option>
                 <?php
@@ -45,7 +45,7 @@ $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
 $args = array(
     'post_type'      => 'movie',
-    'posts_per_page' => 5,
+    'posts_per_page' => 6,
     'paged'          => $paged,
 );
 
@@ -66,7 +66,7 @@ if ($query->have_posts()) :
     echo '<div class="all-movies">';
     while ($query->have_posts()) : $query->the_post();
 
-        $desc = get_post_meta(get_the_ID(), '_movie_description', true);
+        $author = get_post_meta(get_the_ID(), '_movie_author', true);
         $casting = get_post_meta(get_the_ID(), '_movie_cast', true);
         $director = get_post_meta(get_the_ID(), '_movie_director', true);
         $date = get_post_meta(get_the_ID(), '_movie_date', true);
@@ -78,7 +78,7 @@ if ($query->have_posts()) :
             $category_names = wp_list_pluck($categories, 'name');
             $category_list = implode(', ', $category_names);
         }
-        ?>
+?>
         <a href="<?php echo esc_url(get_permalink()); ?>">
             <div class="movie-item">
                 <?php if (has_post_thumbnail()) {
@@ -88,12 +88,12 @@ if ($query->have_posts()) :
                 <h2><?php the_title(); ?></h2>
                 <p><?php the_excerpt(); ?></p>
 
-                <?php if ($desc): ?>
-                    <p><strong>Description: </strong> <?php echo esc_html($desc); ?></p>
+                <?php if ($author): ?>
+                    <p><strong>Author: </strong> <?php echo esc_html($author); ?></p>
                 <?php endif; ?>
 
                 <?php if ($casting): ?>
-                    <p><strong>Cast: </strong> <?php echo esc_html($casting); ?> </p>
+                    <p><strong>Cast: </strong> <?php echo esc_html($casting); ?></p>
                 <?php endif; ?>
 
                 <?php if ($director): ?>
@@ -114,7 +114,7 @@ if ($query->have_posts()) :
 
             </div>
         </a>
-        <?php
+<?php
     endwhile;
     echo '</div>';
     echo '<div class="pagination">';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Astra Child Theme functions and definitions
  *
@@ -8,37 +9,32 @@
  * @since 1.0.0
  */
 
-define( 'CHILD_THEME_ASTRA_CHILD_VERSION', '1.0.0' );
+define('CHILD_THEME_ASTRA_CHILD_VERSION', '1.0.0');
 
-function child_enqueue_styles() {
-    wp_enqueue_style( 'astra-child-theme-css', get_stylesheet_directory_uri() . '/style.css', array('astra-theme-css'), CHILD_THEME_ASTRA_CHILD_VERSION, 'all' );
+function child_enqueue_styles()
+{
+    wp_enqueue_style('astra-child-theme-css', get_stylesheet_directory_uri() . '/style.css', array('astra-theme-css'), CHILD_THEME_ASTRA_CHILD_VERSION, 'all');
 }
-add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
+add_action('wp_enqueue_scripts', 'child_enqueue_styles', 15);
 
-function enqueue_ajax_script_with_var() {
+function enqueue_ajax_script_with_var()
+{
     wp_enqueue_script('ajax-script', get_stylesheet_directory_uri() . '/school.js', array('jquery'), null, true);
 
     wp_localize_script('ajax-script', 'ajax_object', [
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('school_nonce')  
+        'nonce' => wp_create_nonce('school_nonce')
     ]);
 }
 add_action('wp_enqueue_scripts', 'enqueue_ajax_script_with_var');
 
-// function enqueue_school_scripts() {
-//     wp_enqueue_script('school-script', get_stylesheet_directory_uri() . '/js/school.js', array('jquery'), null, true);
-
-//     wp_localize_script('school-script', 'ajax_object', array(
-//         'ajaxurl' => admin_url('admin-ajax.php'),
-//         'nonce'   => wp_create_nonce('school_nonce')
-//     ));
-// }
-// add_action('wp_enqueue_scripts', 'enqueue_school_scripts');
 
 
 
-function add_data() {
-    check_ajax_referer('school_nonce', 'nonce');  
+
+function add_data()
+{
+    check_ajax_referer('school_nonce', 'nonce');
 
     global $wpdb;
     $table = 'student_tbl';
@@ -70,7 +66,7 @@ function add_data() {
             'email'     => $email,
             'schoolid'  => $schoolid,
         ],
-        ['%s', '%s', '%s', '%d', '%s', '%s','%d']
+        ['%s', '%s', '%s', '%d', '%s', '%s', '%d']
     );
 
     if ($inserted) {
@@ -82,10 +78,11 @@ function add_data() {
     wp_die();
 }
 add_action('wp_ajax_insert_user_data', 'add_data');
-add_action('wp_ajax_nopriv_insert_user_data', 'add_data');  
+add_action('wp_ajax_nopriv_insert_user_data', 'add_data');
 
 
-function show_data(){
+function show_data()
+{
     check_ajax_referer('school_nonce', 'nonce');
 
     global $wpdb;
@@ -120,7 +117,8 @@ add_action('wp_ajax_show_user_data', 'show_data');
 add_action('wp_ajax_nopriv_show_user_data', 'show_data');
 
 
-function delete_user(){
+function delete_user()
+{
     check_ajax_referer('school_nonce', 'nonce');
 
     global $wpdb;
@@ -137,14 +135,15 @@ function delete_user(){
 
     wp_die();
 }
-add_action('wp_ajax_delete_user_data','delete_user');
-add_action('wp_ajax_nopriv_delete_user_data','delete_user');
+add_action('wp_ajax_delete_user_data', 'delete_user');
+add_action('wp_ajax_nopriv_delete_user_data', 'delete_user');
 
 add_action('wp_ajax_update_user_data', 'update_user');
 add_action('wp_ajax_nopriv_update_user_data', 'update_user');
 
-function update_user() {
-    check_ajax_referer('school_nonce', 'nonce'); 
+function update_user()
+{
+    check_ajax_referer('school_nonce', 'nonce');
 
     global $wpdb;
     $table = 'student_tbl';
@@ -187,7 +186,8 @@ function update_user() {
 }
 
 
-function add_school_data() {
+function add_school_data()
+{
     global $wpdb;
     $table = 'school_tbl';
 
@@ -213,7 +213,8 @@ function add_school_data() {
 }
 add_action('wp_ajax_insert_school_data', 'add_school_data');
 
-function update_school_data() {
+function update_school_data()
+{
     global $wpdb;
     $schoolid = intval($_POST['schoolid']);
     $schoolname = sanitize_text_field($_POST['schoolname']);
@@ -242,7 +243,8 @@ function update_school_data() {
 }
 add_action('wp_ajax_update_school_data', 'update_school_data');
 
-function delete_school_data() {
+function delete_school_data()
+{
     global $wpdb;
     $table = 'school_tbl';
     $id = intval($_POST['schoolid']);
@@ -259,7 +261,8 @@ function delete_school_data() {
 }
 add_action('wp_ajax_delete_school_data', 'delete_school_data');
 
-function show_school_data() {
+function show_school_data()
+{
     global $wpdb;
     $table = 'school_tbl';
     $results = $wpdb->get_results("SELECT * FROM $table");
@@ -267,9 +270,10 @@ function show_school_data() {
     if ($results) {
         $html = '';
         foreach ($results as $row) {
-            $edit_url = esc_url(home_url('/add-school') . '?schoolid=' . esc_attr($row->schoolid) .
-                '&schoolname=' . urlencode($row->schoolname) .
-                '&address=' . urlencode($row->address)
+            $edit_url = esc_url(
+                home_url('/add-school') . '?schoolid=' . esc_attr($row->schoolid) .
+                    '&schoolname=' . urlencode($row->schoolname) .
+                    '&address=' . urlencode($row->address)
             );
 
             $html .= '<tr>';
@@ -296,38 +300,37 @@ add_action('wp_ajax_show_school_data', 'show_school_data');
 add_action('wp_ajax_get_school_address', 'get_school_address_callback');
 add_action('wp_ajax_nopriv_get_school_address', 'get_school_address_callback');
 
-function get_school_address_callback() {
+function get_school_address_callback()
+{
     global $wpdb;
     $schoolid = isset($_POST['schoolid']) ? intval($_POST['schoolid']) : 0;
-    if(!$schoolid) {
+    if (!$schoolid) {
         wp_send_json_error('No school ID provided');
     }
 
     $school_table = $wpdb->prefix . 'school_tbl';
     $address = $wpdb->get_var($wpdb->prepare("SELECT address FROM $school_table WHERE schoolid = %d", $schoolid));
 
-    if($address) {
+    if ($address) {
         wp_send_json_success(['address' => $address]);
     } else {
         wp_send_json_error('No address found');
     }
 }
 
-
-
-
-
-
-function enqueue_movie_styles() {
+function enqueue_movie_styles()
+{
     if (!is_admin()) {
         wp_enqueue_style('movie-custom-style', get_stylesheet_directory_uri() . '/movie-style.css', array());
+        wp_enqueue_script('movie', get_stylesheet_directory_uri() . '/movies.js', array('jquery'), null, true);
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_movie_styles');
 
 
 
-function register_movies_post_type() {
+function register_movies_post_type()
+{
     $labels = array(
         'name' => 'Movies',
         'singular_name' => 'Movie',
@@ -350,14 +353,15 @@ function register_movies_post_type() {
         'supports' => array('title', 'editor', 'thumbnail'),
         'has_archive' => true,
         'rewrite' => array('slug' => 'movies'),
-        'show_in_rest' => true, 
+        'show_in_rest' => true,
     );
     register_post_type('movie', $args);
 }
 
 add_action('init', 'register_movies_post_type');
 
-function register_movie_categories_taxonomy() {
+function register_movie_categories_taxonomy()
+{
     $labels = array(
         'name'              => 'Movie Categories',
         'singular_name'     => 'Movie Category',
@@ -372,53 +376,79 @@ function register_movie_categories_taxonomy() {
 
     $args = array(
         'hierarchical'      => true,
+        'show_admin_column' => true,
         'labels'            => $labels,
         'show_ui'           => true,
         'rewrite'           => array('slug' => 'movie-category'),
         'show_in_rest'      => true,
     );
-  
+
     register_taxonomy('movie_category', array('movie'), $args);
 }
 
 
 add_action('init', 'register_movie_categories_taxonomy');
 
-function add_movie_custom_fields() {
+function add_movie_custom_fields()
+{
     add_meta_box(
-                'movie_details_box', 
-                'Movie Details', 
-                'render_movie_custom_fields', 
-                'movie',  
-                'normal', 
-                'default',  
-            );
-        }
+        'movie_details_box',
+        'Movie Details',
+        'render_movie_custom_fields',
+        'movie',
+        'normal',
+        'default',
+    );
+}
 
 add_action('add_meta_boxes', 'add_movie_custom_fields');
 
 
-function render_movie_custom_fields($post) {
-    $desc = get_post_meta($post->ID, '_movie_description', true);
+function render_movie_custom_fields($post)
+{
+
+    $author = get_post_meta($post->ID, '_movie_author', true);
     $casting = get_post_meta($post->ID, '_movie_cast', true);
     $director = get_post_meta($post->ID, '_movie_director', true);
     $date = get_post_meta($post->ID, '_movie_date', true);
     $rating = get_post_meta($post->ID, '_movie_rating', true);
+    $images = get_post_meta($post->ID, '_movie_images', true);
 
-    ?>
-    <p><label>Description: <textarea name="movie_desc"><?php echo esc_textarea($desc); ?></textarea></label></p>
+    if ($images && is_array($images)) {
+        $image_urls = implode(',', $images);
+    } else {
+        $image_urls = '';
+    }
+?>
+    <p><label>Author: <input type="text" name="movie_author" value="<?php echo esc_attr($author); ?>" /></label></p>
     <p><label>Casting: <input type="text" name="movie_cast" value="<?php echo esc_attr($casting); ?>" /></label></p>
     <p><label>Director: <input type="text" name="movie_director" value="<?php echo esc_attr($director); ?>" /></label></p>
     <p><label>Release Date: <input type="date" name="movie_date" value="<?php echo esc_attr($date); ?>" /></label></p>
     <p><label>Rating: <input type="text" name="movie_rating" value="<?php echo esc_attr($rating); ?>" /></label></p>
-    <?php
+    <p>
+        <label>Images: <input type="text" name="movie_images" id="movie_images" value="<?php echo esc_attr($image_urls); ?>" /></label>
+        <button type="button" id="upload_images_button" class="button">Upload Images</button>
+    </p>
+    <div id="movie_images_preview">
+        <?php
+        if (!empty($image_urls)) {
+            $image_ids = explode(',', $image_urls);
+            foreach ($image_ids as $image_id) {
+                echo wp_get_attachment_image($image_id, 'thumbnail');
+            }
+        }
+        ?>
+    </div>
+    <script src="<?php echo get_stylesheet_directory_uri() . '/movies.js' ?>"></script>
+<?php
 }
 
-function save_movie_custom_fields($post_id) {
+function save_movie_custom_fields($post_id)
+{
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
-     if (isset($_POST['movie_desc']))
-        update_post_meta($post_id, '_movie_description', sanitize_textarea_field($_POST['movie_desc']));
+    if (isset($_POST['movie_author']))
+        update_post_meta($post_id, '_movie_author', sanitize_text_field($_POST['movie_author']));
     if (isset($_POST['movie_cast']))
         update_post_meta($post_id, '_movie_cast', sanitize_text_field($_POST['movie_cast']));
     if (isset($_POST['movie_director']))
@@ -427,6 +457,11 @@ function save_movie_custom_fields($post_id) {
         update_post_meta($post_id, '_movie_date', sanitize_text_field($_POST['movie_date']));
     if (isset($_POST['movie_rating']))
         update_post_meta($post_id, '_movie_rating', sanitize_text_field($_POST['movie_rating']));
+
+    if (isset($_POST['movie_images'])) {
+        $image_ids = explode(',', sanitize_text_field($_POST['movie_images']));
+        update_post_meta($post_id, '_movie_images', $image_ids);
+    }
 }
 
 add_action('save_post', 'save_movie_custom_fields');

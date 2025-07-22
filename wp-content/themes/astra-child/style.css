@@ -33,17 +33,12 @@ body {
 
 .movie-title {
     font-size: 36px;
+    /* text-align: center; */
     font-weight: bold;
     color: #333;
     margin-bottom: 15px;
 }
 
-
-.movie-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
 
 
 .movie-featured-image img {
@@ -56,7 +51,6 @@ body {
 
 .movie-details {
     flex: 1;
-    padding-left: 20px;
 }
 
 .movie-description {
@@ -77,6 +71,7 @@ body {
     font-size: 16px;
     color: #444;
     margin: 5px 0;
+    /* text-align: center; */
 }
 
 
@@ -136,4 +131,3 @@ body {
         font-size: 28px;
     }
 }
-
