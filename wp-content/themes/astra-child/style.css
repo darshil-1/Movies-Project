@@ -1,0 +1,139 @@
+/**
+Theme Name: Astra Child
+Author: Brainstorm Force
+Author URI: http://wpastra.com/about/
+Description: Astra is the fastest, fully customizable & beautiful theme suitable for blogs, personal portfolios and business websites. It is very lightweight (less than 50KB on frontend) and offers unparalleled speed. Built with SEO in mind, Astra comes with schema.org code integrated so search engines will love your site. Astra offers plenty of sidebar options and widget areas giving you a full control for customizations. Furthermore, we have included special features and templates so feel free to choose any of your favorite page builder plugin to create pages flexibly. Some of the other features: # WooCommerce Ready # Responsive # Compatible with major plugins # Translation Ready # Extendible with premium addons # Regularly updated # Designed, Developed, Maintained & Supported by Brainstorm Force. Looking for a perfect base theme? Look no further. Astra is fast, fully customizable and beautiful theme!
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: astra-child
+Template: astra
+*/
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+
+.movie-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.movie-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+
+.movie-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+
+.movie-featured-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.movie-details {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.movie-description {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+
+.movie-custom-fields {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.movie-custom-fields p {
+    font-size: 16px;
+    color: #444;
+    margin: 5px 0;
+}
+
+
+.movie-categories {
+    font-size: 16px;
+    color: #007bff;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.movie-categories a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.movie-categories a:hover {
+    text-decoration: underline;
+}
+
+
+.movie-trailer {
+    background-color: #eef9f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.movie-trailer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.movie-trailer a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+    .movie-meta {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .movie-featured-image img {
+        width: 100%;
+    }
+
+    .movie-details {
+        padding-left: 0;
+        margin-top: 20px;
+    }
+
+    .movie-title {
+        font-size: 28px;
+    }
+}
+
